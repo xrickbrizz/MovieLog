@@ -1,26 +1,39 @@
-export type MovieJournalEntry = [
-  date: string,
-  venue: string,
-  companion: string,
-  review: string,
-  scores: number[],
-];
+export interface ViewingRatings {
+  historia: number;
+  actuaciones: number;
+  bandaSonora: number;
+  final: number;
+  entretenimiento: number;
+  rewatch: number;
+  originalidad: number;
+}
 
-export type MovieRecord = [
-  title: string,
-  year: number,
-  genre: string,
-  runtimeMinutes: number,
-  director: string,
-  favorite: boolean,
-  tags: string[],
-  watchlistStatus: string | null,
-  posterUrl: string,
-  journal: MovieJournalEntry[],
-];
+export interface Viewing {
+  id: string;
+  viewedAt: string;
+  location?: string;
+  watchedWith?: string;
+  comment: string;
+  ratings: ViewingRatings;
+  finalScore: number;
+}
+
+export interface MovieRecord {
+  id: string;
+  title: string;
+  year: number;
+  genre: string;
+  runtimeMinutes: number;
+  director: string;
+  favorite: boolean;
+  tags: string[];
+  watchlistStatus: string | null;
+  posterUrl: string;
+  viewings: Viewing[];
+}
 
 export interface MovieJournalState {
   library: MovieRecord[];
-  journal: MovieJournalEntry[];
+  journal: Viewing[];
   watchlist: MovieRecord[];
 }

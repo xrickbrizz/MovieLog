@@ -14,7 +14,7 @@ export const App = () => {
       return library;
     }
 
-    return library.filter((movie) => movie.join(' ').toLowerCase().includes(query));
+    return library.filter((movie) => [movie.title, movie.year, movie.genre, movie.director, ...movie.tags, movie.watchlistStatus ?? ''].join(' ').toLowerCase().includes(query));
   }, [library, searchQuery]);
 
   const filteredSeenMovies = useMemo(
