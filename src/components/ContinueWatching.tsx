@@ -11,7 +11,7 @@ export const ContinueWatching = ({ movies }: { movies: MovieRecord[] }) => (
           <progress value="65" max="100" />
         </div>
       ))}
-      <div className="streak"><small>Racha de visualización</small><strong>12 días</strong>⚡</div>
+      <div className="streak"><small>Diario personal</small><strong>{movies.length}</strong><span>películas registradas</span></div>
     </div>
   </>
 );

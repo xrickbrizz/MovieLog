@@ -17,7 +17,63 @@ const createInitialState = (): MovieJournalState => ({
   watchlist: INITIAL_LIBRARY.filter((movie) => movie[7]),
 });
 
-const isStorageAvailable = (): boolean => typeof window !== 'undefined' && Boolean(window.localStorage);
+const isStorageAvailable = (): boolean => {
+  try {
+    return typeof window !== 'undefined' && Boolean(window.localStorage);
+  } catch {
+    return false;
+  }
+};
+
+const isNumber = (value: unknown): value is number => typeof value === 'number' && Number.isFinite(value);
+
+const isString = (value: unknown): value is string => typeof value === 'string';
+
+const isJournalEntry = (value: unknown): value is MovieJournalEntry => (
+  Array.isArray(value)
+  && value.length === 5
+  && value.slice(0, 4).every(isString)
+  && Array.isArray(value[4])
+  && value[4].length > 0
+  && value[4].every(isNumber)
+);
+
+const isMovieRecord = (value: unknown): value is MovieRecord => (
+  Array.isArray(value)
+  && value.length === 10
+  && isString(value[0])
+  && isNumber(value[1])
+  && isString(value[2])
+  && isNumber(value[3])
+  && isString(value[4])
+  && typeof value[5] === 'boolean'
+  && Array.isArray(value[6])
+  && value[6].every(isString)
+  && (value[7] === null || isString(value[7]))
+  && isString(value[8])
+  && Array.isArray(value[9])
+  && value[9].every(isJournalEntry)
+);
+
+const isMovieJournalState = (value: unknown): value is MovieJournalState => {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+
+  const candidate = value as Partial<MovieJournalState>;
+  return Array.isArray(candidate.library)
+    && candidate.library.every(isMovieRecord)
+    && Array.isArray(candidate.journal)
+    && candidate.journal.every(isJournalEntry)
+    && Array.isArray(candidate.watchlist)
+    && candidate.watchlist.every(isMovieRecord);
+};
+
+const recoverInitialState = (): MovieJournalState => {
+  const initialState = createInitialState();
+  writeMovieJournalState(initialState);
+  return initialState;
+};
 
 export const readMovieJournalState = (): MovieJournalState => {
   if (!isStorageAvailable()) {
@@ -26,12 +82,20 @@ export const readMovieJournalState = (): MovieJournalState => {
 
   const storedState = window.localStorage.getItem(STORAGE_KEY);
   if (!storedState) {
-    const initialState = createInitialState();
-    writeMovieJournalState(initialState);
-    return initialState;
+    return recoverInitialState();
   }
 
-  return JSON.parse(storedState) as MovieJournalState;
+  try {
+    const parsedState: unknown = JSON.parse(storedState);
+
+    if (isMovieJournalState(parsedState)) {
+      return parsedState;
+    }
+  } catch (error) {
+    console.error('No se pudo leer Movie Journal desde LocalStorage.', error);
+  }
+
+  return recoverInitialState();
 };
 
 export const writeMovieJournalState = (state: MovieJournalState): void => {
