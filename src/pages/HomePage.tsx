@@ -7,7 +7,7 @@ import { SectionTitle } from '../components/SectionTitle';
 import { StatsCards } from '../components/StatsCards';
 import type { MovieRecord } from '../types/movie';
 
-const filters = ['Género', 'Año', 'Nota', 'Favoritas', 'Etiquetas', 'Fecha'];
+const filters = ['Género', 'Año', 'Visionados', 'Favoritas', 'Etiquetas', 'Fecha'];
 
 export const HomePage = ({ movies, seenMovies }: { movies: MovieRecord[]; seenMovies: MovieRecord[] }) => (
   <>
@@ -18,7 +18,7 @@ export const HomePage = ({ movies, seenMovies }: { movies: MovieRecord[]; seenMo
     </section>
     <ContinueWatching movies={seenMovies} />
     <SectionTitle title="Vistas recientemente" action="Ver historial →" />
-    <div className="grid">{seenMovies.map((movie) => <MoviePoster movie={movie} key={movie[0]} />)}</div>
+    <div className="grid">{seenMovies.map((movie) => <MoviePoster movie={movie} key={movie.id} />)}</div>
     <div className="columns"><FeatureReview /><ActivityFeed /></div>
     <h1 id="estadísticas">Estadísticas</h1>
     <StatsCards movies={movies} />
@@ -29,6 +29,6 @@ export const HomePage = ({ movies, seenMovies }: { movies: MovieRecord[]; seenMo
     <Timeline movies={seenMovies} />
     <h1 id="biblioteca">Biblioteca y filtros</h1>
     <div className="filters">{filters.map((filter) => <button key={filter}>{filter}</button>)}</div>
-    <div className="grid">{movies.map((movie) => <MoviePoster movie={movie} key={movie[0]} />)}</div>
+    <div className="grid">{movies.map((movie) => <MoviePoster movie={movie} key={movie.id} />)}</div>
   </>
 );
