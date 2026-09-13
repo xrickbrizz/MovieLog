@@ -1,16 +1,2 @@
-import React from 'react';
-import ReactDOM from 'react-dom/client';
-import { App } from './App';
-import { AppErrorBoundary } from './components/AppErrorBoundary';
-import { MovieJournalProvider } from './context/MovieJournalContext';
-import './styles/global.css';
-
-ReactDOM.createRoot(document.getElementById('root')!).render(
-  <React.StrictMode>
-    <AppErrorBoundary>
-      <MovieJournalProvider>
-        <App />
-      </MovieJournalProvider>
-    </AppErrorBoundary>
-  </React.StrictMode>,
-);
+import React from 'react'; import ReactDOM from 'react-dom/client'; import { App } from './App'; import './styles/global.css';
+ReactDOM.createRoot(document.getElementById('root')!).render(<React.StrictMode><App /></React.StrictMode>);
